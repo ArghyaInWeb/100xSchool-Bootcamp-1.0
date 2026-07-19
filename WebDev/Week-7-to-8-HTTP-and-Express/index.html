@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="number" name="" id="number1">
+    <input type="number" name="" id="number2">
+
+    <button onclick="add()">Sum</button>
+    <button onclick="sub()">Subtract</button>
+    <button onclick="mul()">Multiply</button>
+    <button onclick="div()">Divide</button>
+
+    <div id="answer"></div>
+</body>
+<!-- <script type="module" src="./index.js"></script> -->
+<script>
+    async function add() {
+        const a = document.getElementById('number1').value;
+        const b = document.getElementById('number2').value;
+
+        const res = await fetch(`http://localhost:8000/sum`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                a, 
+                b
+            })
+        })
+        const json = await res.json()
+        document.getElementById('answer').innerHTML = json.ans
+
+    }
+
+    async function sub() {
+        const a = document.getElementById('number1').value;
+        const b = document.getElementById('number2').value;
+
+        const res = await fetch(`http://localhost:8000/sub/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                a, 
+                b
+            })
+        })
+        const json = await res.json()
+        document.getElementById('answer').innerHTML = json.ans
+
+    }
+
+    async function mul() {
+        const a = document.getElementById('number1').value;
+        const b = document.getElementById('number2').value;
+
+        const res = await fetch(`http://localhost:8000/mul/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                a, 
+                b
+            })
+        })
+        const json = await res.json()
+        document.getElementById('answer').innerHTML = json.ans
+
+    }
+
+    async function div() {
+        const a = document.getElementById('number1').value;
+        const b = document.getElementById('number2').value;
+
+        const res = await fetch(`http://localhost:8000/div/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                a, 
+                b
+            })
+        })
+        const json = await res.json()
+        document.getElementById('answer').innerHTML = json.ans
+
+    }
+</script>
+</html>
