@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="notes-controls">
+      <input type="text" id="new-note" placeholder="Enter your note here" />
+      <input type="button" value="Create" onclick="createNote()" />
+    </div>
+    <div
+      class="notes-section"
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: start;
+        margin-top: 20px;
+      "
+    >
+      Loading Notes...
+    </div>
+  <script>
+    async function createNote() {
+      await axios.post("http://localhost:3000/new-note", {
+        newNote: document.getElementById("new-note").value,
+      });
+
+      const newNoteDiv = document.createElement("div");
+      newNoteDiv.innerHTML = document.getElementById("new-note").value;
+      document.querySelector(".notes-section").appendChild(newNoteDiv);
+
+      document.getElementById("new-note").value = "";
+    }
+
+    async function getNotes() {
+      const response = await axios.get("http://localhost:3000/notes");
+      const notes = response.data;
+
+      document.querySelector(".notes-section").innerHTML = "";
+
+      for (let i = 0; i < notes.length; i++) {
+        const newNoteDiv = document.createElement("div");
+        newNoteDiv.innerHTML = notes[i];
+
+        document.querySelector(".notes-section").appendChild(newNoteDiv);
+      }
+    }
+    getNotes();
+  </script>
+  </body>
+</html>
