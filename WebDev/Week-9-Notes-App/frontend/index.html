@@ -26,7 +26,11 @@
   <script>
     async function createNote() {
       await axios.post("http://localhost:3000/new-note", {
-        newNote: document.getElementById("new-note").value,
+        note: document.getElementById("new-note").value,
+      }, {
+        headers: {
+            token: localStorage.getItem("token")
+        }
       });
 
       const newNoteDiv = document.createElement("div");
@@ -37,14 +41,18 @@
     }
 
     async function getNotes() {
-      const response = await axios.get("http://localhost:3000/notes");
-      const notes = response.data;
-
+      const response = await axios.get("http://localhost:3000/notes", {
+        headers: {
+            token: localStorage.getItem("token")
+        }
+      });
+      const notes = response.data.notes;
+      console.log(notes)
       document.querySelector(".notes-section").innerHTML = "";
 
       for (let i = 0; i < notes.length; i++) {
         const newNoteDiv = document.createElement("div");
-        newNoteDiv.innerHTML = notes[i];
+        newNoteDiv.innerHTML = notes[i].note;
 
         document.querySelector(".notes-section").appendChild(newNoteDiv);
       }
