@@ -10,7 +10,7 @@ export function authenticate(req, res, next) {
       message: "You are not logged in.",
     });
   }
-  const verifyJWT = jwt.verify(getToken, "JWT_SECRET");
+  const verifyJWT = jwt.verify(getToken, JWT_SECRET);
   const userId = verifyJWT.userId;
 
   if (!userId) {
