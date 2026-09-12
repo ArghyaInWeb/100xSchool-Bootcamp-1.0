@@ -104,21 +104,33 @@ app.post("/create-board", (req, res) => {
 })
 
 // invite members
-app.post("/members", authenticate, (req, res) => {
+app.post("/members", authenticate, async(req, res) => {
     const userId = req.userId
-    const organizationId = req.body.id //todo here!!!!
-    const memberUsername = req.body.userName
+    const organizationId = req.body.id
+    const memberUsername = req.body.username
 
-    const organization = ORGANIZATION.find(org => org.id === organizationId)
+    const findOrganization = await organizationModel.findOne({
+        _id: organizationId,
+        admin: userId
+    })
 
-    if(!organization || organization.admin !== userId) {
+    if(!findOrganization) {
         res.status(411).json({
             message: "Organization doesn't exist."
         })
         return
     }
 
-    const invitedUser = USERS.find(u => u.username === memberUsername)
+    if(findOrganization.admin.toString() !== userId) {
+        res.status(411).json({
+            message: "Unauthorized request"
+        })
+        return
+    }
+
+    const invitedUser = await userModel.findOne({
+        username: memberUsername
+    })
 
     if(!invitedUser) {
         res.status(403).json({
@@ -127,7 +139,11 @@ app.post("/members", authenticate, (req, res) => {
         return
     }
 
-    const alreadyMember = organization.members.some(id => id === invitedUser.id)
+    const alreadyMember = await organizationModel.findOne({
+        _id: organizationId,
+        members: invitedUser._id
+    })
+    
     if(alreadyMember) {
         res.status(409).json({
             message: "User is already a member"
@@ -135,10 +151,18 @@ app.post("/members", authenticate, (req, res) => {
         return
     }
     
-    organization.members.push(invitedUser.id)
+    const updatedOrg = await organizationModel.findOneAndUpdate({
+        _id: organizationId,
+        admin: userId
+    }, {
+        $addToSet: {
+            members: invitedUser._id
+        }
+    }, { new: true})
 
     res.json({
-        message: "Member successfully added to the organization"
+        message: "Member successfully added to the organization",
+        updatedOrg
     })
 })
 
