@@ -73,23 +73,28 @@ app.post("/onboard", (req, res) => {
 })
 
 // create organization
-app.post("/organization", authenticate, (req, res) => {
+app.post("/organization", authenticate, async(req, res) => {
     const userId = req.userId
+    const title = req.body.title
+    const description = req.body.description
 
-    const newOrg = {
-        id: ORGANIZATION_ID,
-        title: req.body.title,
-        description: req.body.description,
-        admin: userId,
-        members: []
+    if(!title) {
+        res.status(400).json({
+            message: "Title is required"
+        })
+        return
     }
 
-    ORGANIZATION.push(newOrg)
-    ORGANIZATION_ID++
+    const newOrg = await organizationModel.create({
+        title,
+        description,
+        admin: userId,
+        members: []
+    })
 
     res.json({
         message: "Organization created",
-        id: newOrg.id //todo id or organization id on post/members
+        id: newOrg._id
     })
 
 })
