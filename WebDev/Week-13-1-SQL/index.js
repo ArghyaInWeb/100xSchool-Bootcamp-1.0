@@ -1,9 +1,9 @@
 import express from "express";
 import { Pool } from "pg";
 
-const pool = new Pool({
-  connectionString:
-});
+// const pool = new Pool({
+//   connectionString:
+// });
 
 const app = express();
 app.use(express.json());
