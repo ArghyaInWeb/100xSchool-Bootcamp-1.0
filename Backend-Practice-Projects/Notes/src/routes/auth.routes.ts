@@ -2,9 +2,9 @@ import { client } from "../lib/prisma.ts";
 import { Router } from "express";
 import bcrypt from "bcrypt";
 
-const router = Router();
+const authRouter = Router();
 
-router.post("/signup", async (req, res) => {
+authRouter.post("/signup", async (req, res) => {
     const email: string = req.body.email;
     const username: string = req.body.username;
     const password: string = req.body.password;
@@ -42,7 +42,7 @@ router.post("/signup", async (req, res) => {
     });
 });
 
-router.post("/signin", async (req, res) => {
+authRouter.post("/signin", async (req, res) => {
     const email: string = req.body.email;
     const password: string = req.body.password;
 
@@ -94,3 +94,7 @@ router.post("/signin", async (req, res) => {
         message: "Signed in successfully",
     });
 });
+
+//TODO: logout route
+
+export default authRouter
